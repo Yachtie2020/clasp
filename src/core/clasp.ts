@@ -183,7 +183,7 @@ export async function initClaspInstance(options: InitOptions): Promise<Clasp> {
 
   // Determine file extensions, push order, and content directory from the loaded config.
   const fileExtensions = readFileExtensions(config);
-  const filePushOrder = config.filePushOrder || []; // Default to empty array if not specified.
+  const filePushOrder = config.filePushOrder?.map((p: string) => path.normalize(p)) || []; // Default to empty array if not specified.
   // Content directory can be specified by `srcDir` or `rootDir` in .clasp.json, defaulting to project root.
   const contentDir = path.resolve(projectRoot.rootDir, config.srcDir || config.rootDir || '.');
 
