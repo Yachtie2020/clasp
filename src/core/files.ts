@@ -327,24 +327,23 @@ export class Files {
     };
   }
 
-
-/**
- * Compares a set of local files with remote files to identify changes.
- * @param {ProjectFile[]} localFiles The array of local project files.
- * @param {ProjectFile[]} remoteFiles The array of remote project files (HEAD version).
- * @returns {ProjectFile[]} An array of project files that have changed.
- */
-checkChangedFiles(localFiles: ProjectFile[], remoteFiles: ProjectFile[]): ProjectFile[] {
-  // Iterate over local files and compare with their remote counterparts.
-  return localFiles.reduce((changed: ProjectFile[], localFile: ProjectFile) => {
-    const remote = remoteFiles.find(f => f.localPath === localFile.localPath);
-    // A file is considered changed if it doesn't exist remotely or if its source content differs.
-    if (!remote || remote.source !== localFile.source) {
-      changed.push(localFile);
-    }
-    return changed;
-  }, []);
-}
+  /**
+   * Compares a set of local files with remote files to identify changes.
+   * @param {ProjectFile[]} localFiles The array of local project files.
+   * @param {ProjectFile[]} remoteFiles The array of remote project files (HEAD version).
+   * @returns {ProjectFile[]} An array of project files that have changed.
+   */
+  checkChangedFiles(localFiles: ProjectFile[], remoteFiles: ProjectFile[]): ProjectFile[] {
+    // Iterate over local files and compare with their remote counterparts.
+    return localFiles.reduce((changed: ProjectFile[], localFile: ProjectFile) => {
+      const remote = remoteFiles.find(f => f.localPath === localFile.localPath);
+      // A file is considered changed if it doesn't exist remotely or if its source content differs.
+      if (!remote || remote.source !== localFile.source) {
+        changed.push(localFile);
+      }
+      return changed;
+    }, []);
+  }
 
   /**
    * Identifies files present in the local content directory that are not tracked
@@ -492,7 +491,7 @@ checkChangedFiles(localFiles: ProjectFile[], remoteFiles: ProjectFile[]): Projec
 
     // need check file actual exists
     for (const filePath of filePushOrder) {
-      const fileExists = localFiles.some((f) => f.localPath === filePath);
+      const fileExists = localFiles.some(f => f.localPath === filePath);
       if (!fileExists) {
         missingFiles.push(filePath);
       }

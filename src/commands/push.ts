@@ -106,11 +106,9 @@ export const command = new Command('push')
       // You can throw an error here to stop execution, or return a specific code.
       debug('Collected %d local files', localFiles.length);
       if (localFiles.length === 0) {
-        const noFileMessage = intl.formatMessage(
-          {
-            defaultMessage: `No local files found`
-          }
-        );
+        const noFileMessage = intl.formatMessage({
+          defaultMessage: `No local files found`,
+        });
         console.log(noFileMessage);
         return;
       }
@@ -121,15 +119,16 @@ export const command = new Command('push')
 
     if (missingFiles.length > 0) {
       // Use forEach to iterate over the array of missing file paths
-      missingFiles.forEach((filePath) => {
+      missingFiles.forEach(filePath => {
         debug('File ${filePath} defined in filePushOrder not found.');
         const noFileMessage = intl.formatMessage(
           {
             defaultMessage: `File {filePath} defined in filePushOrder not found.`,
           },
           {
-            filePath: filePath
-          });
+            filePath: filePath,
+          },
+        );
         console.log(noFileMessage);
       });
     }
