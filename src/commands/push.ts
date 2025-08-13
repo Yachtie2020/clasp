@@ -22,6 +22,10 @@ import {Clasp} from '../core/clasp.js';
 import {intl} from '../intl.js';
 import {GlobalOptions, isInteractive, withSpinner} from './utils.js';
 
+import Debug from 'debug';
+
+const debug = Debug('clasp:core');
+
 interface CommandOptions extends GlobalOptions {
   readonly watch?: boolean;
   readonly force?: boolean;
@@ -95,7 +99,45 @@ export const command = new Command('push')
     };
 
     // Initial check for pending changes when the command is first run.
-    const pendingChanges = await clasp.files.getChangedFiles();
+    const localFiles = await clasp.files.collectLocalFiles();
+
+    // If there are no local files, we can exit immediately.
+    if (localFiles.length === 0) {
+      // You can throw an error here to stop execution, or return a specific code.
+      debug('Collected %d local files', localFiles.length);
+      if (localFiles.length === 0) {
+        const noFileMessage = intl.formatMessage(
+          {
+            defaultMessage: `No local files found`
+          }
+        );
+        console.log(noFileMessage);
+        return;
+      }
+    }
+
+    // Check filePushOrder has no configuration issues
+    const missingFiles = await clasp.files.checkMissingFilesFromPushOrder(localFiles);
+
+    if (missingFiles.length > 0) {
+      // Use forEach to iterate over the array of missing file paths
+      missingFiles.forEach((filePath) => {
+        debug('File ${filePath} defined in filePushOrder not found.');
+        const noFileMessage = intl.formatMessage(
+          {
+            defaultMessage: `File {filePath} defined in filePushOrder not found.`,
+          },
+          {
+            filePath: filePath
+          });
+        console.log(noFileMessage);
+      });
+    }
+
+    // If local files exist, proceed to fetch remote files and check for changes.
+    const remoteFiles = await clasp.files.fetchRemote();
+    const pendingChanges = clasp.files.checkChangedFiles(localFiles, remoteFiles);
+
     if (pendingChanges.length) {
       // If there are changes, map them to their paths and call onChange.
       const paths = pendingChanges.map(f => f.localPath);
