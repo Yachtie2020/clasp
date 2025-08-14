@@ -240,8 +240,23 @@ When running `clone` or `create`, a file named `.clasp.json` is created in the c
   "scriptId": "",
   "rootDir": "build/",
   "projectId": "project-id-xxxxxxxxxxxxxxxxxxx",
-  "fileExtension": "ts",
-  "filePushOrder": ["file1.ts", "file2.ts"]
+  "scriptExtensions": [
+    ".js",
+    ".gs",
+  ],
+  "htmlExtensions": [
+    ".html"
+  ],
+  "jsonExtensions": [
+    ".json"
+  ],
+  "filePushOrder": [
+    "build/file1.js",
+    "build/file2.js",
+    "build/test/file3.js",
+    "build/test/file4.js"
+    ],
+  "skipSubdirectories": false
 }
 ```
 
@@ -701,7 +716,7 @@ Using clasp for your project? Add a README badge to show it off: [![clasp](https
 
 ## Develop clasp
 
-See [the develop guide](docs/develop.md) for instructions on how to build `clasp`. It's not that hard!
+See [the develop guide](docs/README.md) for instructions on how to build `clasp`. It's not that hard!
 
 ## Contributing
 
